@@ -29,52 +29,33 @@ def myNetwork():
 
     info( '*** Add switches\n')
     s1 = net.addSwitch('s1')
-    s2 = net.addSwitch('s2')
-  
-    
-    newIntf10 = 'tap0'
-    newIntf20 = 'tap1'
+
+
+    newIntf = 'eth1'
     #Intf( newIntf, node=s1 )
 
     info( '*** Add hosts\n')
+    
     h1 = net.addHost('h1')
+    #h1 = net.addHost('h1', ip='192.168.3.101/24')
+   
+
+    h1.cmd('ip a a 192.168.4.1/24 dev h1-eth0')
     info( '*** Add links\n')
     net.addLink(h1, s1)
 
+    
+    info( '*** Checking', newIntf, '\n' )
+    checkIntf( newIntf )
 
-    info( '*** Add hosts\n')
-    h2 = net.addHost('h2')
-    info( '*** Add links\n')
-    net.addLink(h2, s2)
+    switch = net.switches[ 0 ]
+    info( '*** Adding', newIntf, 'to switch', switch.name, '\n' ) 
+    #switch.addIntf('eth1')
 
-  
-    info( '*** Checking bridge interface ', newIntf10, '\n' )
-    checkIntf( newIntf10 )
-
-    switch1 = net.switches[ 0 ]
-    info( '*** Adding', newIntf10, 'to switch', switch1.name, '\n' ) 
-    brintf1 = Intf( newIntf10, node=switch1 )
-    #switch1.addIntf( newIntf10 )
-
-    info( '*** Checking bridge interface ', newIntf20, '\n' )
-    checkIntf( newIntf20 )
-
-    switch2 = net.switches[ 1 ]
-    info( '*** Adding', newIntf20, 'to switch', switch2.name, '\n' ) 
-    brintf2 = Intf( newIntf20, node=switch2 )
-    #switch2.addIntf( newIntf20 )
-
-
+    brintf = Intf( newIntf, node=switch )
     
     info( '*** Starting network\n')
     net.start()
-
-    info ( '*** Set hosts IP addresse s\n') 
-    h1.setIP('192.168.10.1','24')
-    h2.setIP('192.168.20.1','24')
-
-
-
     #h1.cmdPrint('dhclient '+h1.defaultIntf().name)
     CLI(net)
     net.stop()
