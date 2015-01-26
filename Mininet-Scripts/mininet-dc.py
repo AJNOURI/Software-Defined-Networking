@@ -8,6 +8,7 @@ from mininet.link import Intf
 from mininet.log import setLogLevel, info, error
 from mininet.util import quietRun
 
+
 def checkIntf( intf ):
     "Make sure intf exists and is not configured."
     if ( ' %s:' % intf ) not in quietRun( 'ip link show' ):
@@ -21,8 +22,7 @@ def checkIntf( intf ):
 
 def myNetwork():
 
-    net = Mininet( topo=None,
-                   build=False)
+    net = Mininet( topo=None, build=False)
 
     info( '*** Adding controller\n' )
     net.addController(name='c0')
@@ -32,7 +32,6 @@ def myNetwork():
 
     max_hosts = 50
     newIntf = 'eth1'
-    #Intf( newIntf, node=s1 )
 
     host_list = {}
 
@@ -41,7 +40,6 @@ def myNetwork():
         host_list[i] = net.addHost('h'+str(i))
         info( '*** Add links between ',host_list[i],' and s1 \r')
         net.addLink(host_list[i], s1)
-
 
     info( '*** Checking the interface ', newIntf, '\n' )
     checkIntf( newIntf )
@@ -52,10 +50,8 @@ def myNetwork():
 
     info( '*** Starting network\n')
     net.start()
-    #h1.cmd('ip a a 192.168.4.1/24 dev h1-eth0')
 
     for i in xrange(1,max_hosts+1):
-        #host_list[i].cmd('python -m SimpleHTTPServer 80')
         info( '*** setting default gateway & udp server on ', host_list[i], '\r' )
         host_list[i].cmd('ip r a default via 10.0.0.254')
         host_list[i].cmd('nc -lu 5555 &')
@@ -66,4 +62,3 @@ def myNetwork():
 if __name__ == '__main__':
     setLogLevel( 'info' )
     myNetwork()
-
